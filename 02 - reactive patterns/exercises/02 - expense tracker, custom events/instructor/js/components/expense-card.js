@@ -104,7 +104,31 @@ class ExpenseCard extends HTMLElement {
     )
 
     // 2. edit button clicked event
-
+    // You can also dispatch an event you're creating on the fly, but then you won't be able to inspect it from this end.
+    this.shadowRoot.querySelector(".edit-btn").addEventListener(
+      "click",
+      () => {
+        this.dispatchEvent(
+          new CustomEvent(
+            "expense-edit",
+            {
+              // I'm going to want to send more than just the ID in the payload for editing an existing item.
+              // I *should* be identifying the actual data item from the data container, rather than extracting values from DOM,
+              //   but this keep things simpler.
+              detail: {
+                id: this.id,
+                title: this.getAttribute("title"),
+                category: this.getAttribute("category"),
+                date: this.getAttribute("date"),
+                amount: this.getAttribute("amount"),
+              },  
+              bubbles: true,
+              compose: true,
+            }
+          )
+        );
+      }
+    );
   }
 }
 
